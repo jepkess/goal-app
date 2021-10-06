@@ -18,6 +18,12 @@ export class GoalComponent implements OnInit {
   toggleDetails(index:number){
     this.goals[index].showdescription=!this.goals[index].showdescription;
   }
+  completeGoal(isComplete: any, index: number){
+    if (isComplete) {
+      this.goals.splice(index,1);
+    }
+    
+  }
   
 
   constructor() { }
