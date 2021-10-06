@@ -11,8 +11,8 @@ export class GoaldetailComponent implements OnInit {
   @Input() goal!: Goal;
   @Output () iscomplete=new EventEmitter<boolean>();
 
-  goalcomplete(complete:boolean){
-    this.iscomplete.emit(complete);
+  goalDelete(complete:boolean){
+    this.iscomplete.emit(complete)
   }
 
   constructor() { }
@@ -21,3 +21,5 @@ export class GoaldetailComponent implements OnInit {
   }
 
 }
+
+// goalcomplete(complete:boolean)
