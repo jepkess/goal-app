@@ -6,7 +6,7 @@
       <h5 id="{{i}}" appStrikethrough>{{ goal.name }} due on {{goal.completeDate | date |uppercase}}</h5>
       <button class="btn btn-success" (click)="toggleDetails(i)">Toggle details</button>
       <div *ngIf='goal.showdescription'>
-        <app-goaldetail *ngIf='goal.showdescription' [goal]='goal' (isComplete)='deleteGoal($event,i)'></app-goaldetail>
+        <app-goaldetail *ngIf='goal.showdescription' [goal]='goal' (isComplete)='completeGoal($event,i)'></app-goaldetail>
       </div>
     </div>
 

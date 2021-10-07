@@ -8,11 +8,13 @@ import { Goal } from '../goal';
   styleUrls: ['./goaldetail.component.css']
 })
 export class GoaldetailComponent implements OnInit {
-  @Input() goal!: Goal;
-  @Output () iscomplete=new EventEmitter<boolean>();
+  @Input() goal: Goal;
+  @Output() isComplete=new EventEmitter<boolean>();
 
+  //goalDelete(complete:boolean)
+  // goalComplete(complete:boolean)
   goalDelete(complete:boolean){
-    this.iscomplete.emit(complete)
+    this.isComplete.emit(complete);
   }
 
   constructor() { }
@@ -22,4 +24,4 @@ export class GoaldetailComponent implements OnInit {
 
 }
 
-// goalcomplete(complete:boolean)
+//
