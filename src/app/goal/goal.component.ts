@@ -1,51 +1,61 @@
 import { Component, OnInit } from '@angular/core';
-import { Goal } from '../goal';
-
+import { GoalServiceService } from '../goal-service.service';  //importing the goalserviceservice
+import { Goal } from '../goal'
+import { AlertService } from '../alert.service'; //importing the alertService
+import { Quote } from '../quote';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-goal',
   templateUrl: './goal.component.html',
-  styleUrls: ['./goal.component.css']
+  styleUrls: ['./goal.component.css'],
+  providers: [GoalServiceService]   //register a provider service in goal.component.ts
 })
 export class GoalComponent implements OnInit {
-  goals: Goal[] = [
-    new Goal(1, 'Watch finding Nemo', 'Find an online version and watch merlin find his son', new Date(2020, 3, 23)),
-    new Goal(2, 'Buy Cookies', 'I have to buy cookies for the parrot', new Date(2018, 5, 14)),
-    new Goal(3, 'Get new Phone Case', 'Diana has her birthday coming up soon', new Date(2012, 7, 23)),
-    new Goal(4, 'Get Dog Food', 'Pupper likes expensive snacks', new Date(2014, 11, 2)),
-    new Goal(5, 'Solve math homework', 'Damn Math', new Date(2016, 9, 23)),
-    new Goal(6, 'Plot my world domination plan', 'Cause I am an evil overlord', new Date(2017, 8, 8)),
-  ];
-  toggleDetails(index: number) {
-    this.goals[index].showdescription = !this.goals[index].showdescription;
+  goals: Goal[];
+  alertService: AlertService; //creating a property alertService of type AlertService
+  quote: Quote;
+
+  constructor(goalService: GoalServiceService, alertService: AlertService, private http: HttpClient) {
+    //passing parameters
+    this.goals = goalService.getGoal();
+    this.alertService = alertService;
   }
-  completeGoal(isComplete: any, index: number) {
-     if (isComplete) {
-      let toDelete = confirm(`Are you sure you want to delete ${this.goals[index].name}?`)
-      if (toDelete) {
-        this.goals.splice(index, 1)
+  ngOnInit() {
+    interface ApiResponse {
+      author: string;
+      quote: string;
+    }
+    this.http.get<ApiResponse>("http://quotes.stormconsultancy.co.uk/random.json").subscribe(data => {
+      //successful API request
+      this.quote = new Quote(data.author, data.quote)
+    }, error => {
+      this.quote = new Quote("Winson churchill", "Never never give up ")
+      console.log("An error occured")
+    })
+  }
+
+
+
+    addNewGoal(goal: any) {
+      let goalLength = this.goals.length;
+      goal.id = goalLength + 1;
+      goal.completeDate = new Date(goal.completeDate)
+      this.goals.push(goal)
+    }
+    toggleDetails(index: any) {
+      this.goals[index].showdescription = !this.goals[index].showdescription;
+      // } completeGoal(isComplete: any, index: any) {
+      //   if (isComplete) {
+      //     this.goals.splice(index, 1);
+      //   }
+    }
+    deleteGoal(isComplete: any, index: any) {
+      if (isComplete) {
+        let toDelete = confirm(`Are you sure you want to delete ${this.goals[index].name}?`)
+        if (toDelete) {
+          this.goals.splice(index, 1)
+          this.alertService.alertMe("The goal has been deleted")
+        }
       }
     }
-
   }
-  addNewGoal(goal: Goal){
-    let goalLength= this.goals.length;
-    goal.id= goalLength+1;
-    goal.completeDate= new Date(goal.completeDate);
-    this.goals.push(goal);
-  }
-
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-}
-
-
-// completeGoal(isComplete: any, index: number){
-//   if (isComplete) {
-//     this.goals.splice(index,1);
-//   }
-
-// }
